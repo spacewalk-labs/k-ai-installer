@@ -1,0 +1,3 @@
+docs/tasks/macmini03-orbstack-prototype.logs/phase1-expected-files.txt
+docs/tasks/macmini03-orbstack-prototype.logs/phase1-plan-review.md
+docs/tasks/macmini03-orbstack-prototype.md
