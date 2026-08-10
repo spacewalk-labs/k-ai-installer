@@ -19,7 +19,7 @@ jobs:
           sw_vers
           xcodebuild -version
           swift --version
-          swift --version | grep -E '^Swift version 6\.'
+          swift --version | grep -E '(^|[[:space:]])(Apple )?Swift version 6\.'
       - name: Test core
         run: scripts/run-self-tests.sh
       - name: Build app
