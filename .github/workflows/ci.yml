@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  macos:
+    runs-on: macos-15
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Verify toolchain
+        run: |
+          sw_vers
+          xcodebuild -version
+          swift --version
+          swift --version | grep -E '(^|[[:space:]])(Apple )?Swift version 6\.'
+      - name: Test core
+        run: scripts/run-self-tests.sh
+      - name: Build app
+        run: scripts/build-macos-app.sh
+      - name: Install secret scanner
+        env:
+          GITLEAKS_VERSION: 8.18.4
+        run: |
+          case "$(uname -m)" in
+            arm64)
+              archive="gitleaks_${GITLEAKS_VERSION}_darwin_arm64.tar.gz"
+              expected="a480d8593acd8215b22402cf0f3f88b01dcd3610c63b5391db640f7767e62104"
+              ;;
+            x86_64)
+              archive="gitleaks_${GITLEAKS_VERSION}_darwin_x64.tar.gz"
+              expected="1a69e5666b13cd374889cbcb1939ed1573b63b551251283d5d2329a53cf58e2f"
+              ;;
+            *) exit 1 ;;
+          esac
+          url="https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/${archive}"
+          curl --fail --location --silent --show-error "$url" --output "$RUNNER_TEMP/$archive"
+          printf '%s  %s\n' "$expected" "$RUNNER_TEMP/$archive" | shasum -a 256 --check
+          mkdir -p "$RUNNER_TEMP/gitleaks-bin"
+          tar -xzf "$RUNNER_TEMP/$archive" -C "$RUNNER_TEMP/gitleaks-bin" gitleaks
+          echo "$RUNNER_TEMP/gitleaks-bin" >> "$GITHUB_PATH"
+      - name: Scan source and app
+        run: |
+          test "$(gitleaks version)" = "8.18.4"
+          runtime="$RUNNER_TEMP/kai-runtime-fixture"
+          mkdir -p "$runtime"
+          printf '{"status":"safe"}\n' > "$runtime/state.json"
+          printf '{"action":"fixture"}\n' > "$runtime/ui-action.json"
+          printf '{"recoveryPending":false}\n' > "$runtime/support-diagnostics.json"
+          scripts/verify-secrets.sh \
+            --runtime-state "$runtime/state.json" \
+            --runtime-receipt "$runtime/ui-action.json" \
+            --runtime-diagnostics "$runtime/support-diagnostics.json" \
+            --manifest-output "$RUNNER_TEMP/secret-scan-manifest.txt"

@@ -1,0 +1,10 @@
+.github/workflows/ci.yml
+.gitleaks.toml
+Resources/Info.plist
+docs/tasks/macmini03-orbstack-prototype.logs/phase3-expected-files.txt
+docs/tasks/macmini03-orbstack-prototype.logs/phase3-secret-scan-targets.txt
+docs/tasks/macmini03-orbstack-prototype.logs/phase3-verification.md
+docs/tasks/macmini03-orbstack-prototype.md
+scripts/build-macos-app.sh
+scripts/verify-orbstack-isolation.sh
+scripts/verify-secrets.sh

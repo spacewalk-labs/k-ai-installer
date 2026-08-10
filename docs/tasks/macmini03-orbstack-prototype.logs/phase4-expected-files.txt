@@ -1,0 +1,5 @@
+docs/tasks/macmini03-orbstack-prototype.logs/phase3-verification.md
+docs/tasks/macmini03-orbstack-prototype.logs/phase4-expected-files.txt
+docs/tasks/macmini03-orbstack-prototype.logs/phase4-live-verification.md
+docs/tasks/macmini03-orbstack-prototype.logs/ui-complete.png
+docs/tasks/macmini03-orbstack-prototype.md

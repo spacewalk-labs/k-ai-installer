@@ -1,0 +1,14 @@
+[extend]
+useDefault = true
+
+[[rules]]
+id = "bitwarden-secrets-manager-access-token"
+description = "Bitwarden Secrets Manager access token assignment"
+regex = '''(?i)BWS_ACCESS_TOKEN\s*[=:]\s*["']?([A-Za-z0-9._-]{20,})'''
+secretGroup = 1
+
+[[rules]]
+id = "tailscale-auth-key"
+description = "Tailscale authentication or API key"
+regex = '''(?i)(tskey-(?:auth|client|api)-[A-Za-z0-9_-]{20,})'''
+secretGroup = 1
