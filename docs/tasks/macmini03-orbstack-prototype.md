@@ -5,8 +5,8 @@
 |---|---|---|---|---|
 | 1 실측·실행 계약 | done | - | k-ai-installer@0b4991f | `docs/tasks/macmini03-orbstack-prototype.logs/phase1-plan-review.md` |
 | 2 네이티브 앱·공통 코어 | done | - | k-ai-installer@a3029b6 | `docs/tasks/macmini03-orbstack-prototype.logs/phase2-verification.md` |
-| 3 패키지·격리 fixture | running | - | | |
-| 4 Mac mini 03 실기 | pending | 3 + Tailscale 쓰기 승인 | | |
+| 3 패키지·격리 fixture | done | - | k-ai-installer@905543a | `docs/tasks/macmini03-orbstack-prototype.logs/phase3-verification.md` |
+| 4 Mac mini 03 실기 | blocked | V6 최종 SHA clean-create · V12 OrbStack ID 삭제 | | `docs/tasks/macmini03-orbstack-prototype.logs/phase4-live-verification.md` |
 | 5 적대 검증·PR·머지 | pending | 4 | | |
 
 | 항목 | 값 |

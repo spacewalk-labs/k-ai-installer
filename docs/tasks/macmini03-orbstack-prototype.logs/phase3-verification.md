@@ -3,7 +3,7 @@
 - 장비: `swk-macmini-03` (`swk` GUI 사용자 컨텍스트)
 - 검증 완료 시각: 2026-08-10T15:34:37Z 이전
 - core source commit: `k-ai-installer@a3029b6`
-- packaging commit: 이 phase 커밋 뒤 Cockpit follow-up에서 기록
+- packaging commit: `k-ai-installer@905543a`
 - Mac build toolchain: Swift 6.0.3, macOS 15.1.1 Command Line Tools
 - app binary SHA-256: `0a04af6cc1da98fe03ed162ff46f2e3c7b041a3d39b0540c7901b740867ef785`
 - app Info.plist SHA-256: `8aa4c1a11f07dde68bba67fa1f107d67496eec7847d9a101c9b63cf8c6567dbb`
