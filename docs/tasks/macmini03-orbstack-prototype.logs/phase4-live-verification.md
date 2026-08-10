@@ -1,19 +1,20 @@
 # Phase 4 — Mac mini 03 live verification
 
-- 장비: `swk-macmini-03` / Mac14,3 / Apple M2 / 8GiB / arm64
-- OS: macOS 15.1.1 (24B91), FileVault Off
-- GUI 사용자: `swk`
+- 장비: `acceptance-mac`(공개용 역할명) / Apple Silicon / 8GiB / arm64
+- OS: macOS 15.x, 보안 preflight 통과(실제 값은 비공개 증거)
+- GUI 사용자: `<gui-user>`(공개용 역할명)
 - OrbStack: notarized 2.2.1
 - 실행 기간: 2026-08-10T14:00Z~16:10Z
-- 보호 대상: 기존 `kaipro-oneshot-mac1`
+- 보호 대상: 기존 `<pre-existing-control-vm>`(공개용 역할명)
 - 판정: **BLOCKED — core/create feasibility는 확인했지만 V6 최종 후보 clean-create와 V12 안전 삭제가 미충족**
 
-IP, install ID, machine record ID, nonce와 사용자 홈의 실제 내용은 기록하지 않았습니다. 아래 명령에서 `run_user`는
-모두 정확히 다음 함수였습니다.
+운영 호스트명·계정·원격 접근 방식·보안 설정값, IP, install ID, machine record ID, nonce와 사용자 홈의 실제
+내용은 기록하지 않았습니다. 정확한 내부 명령은 비공개 증거에 두고, 아래 공개 사본에서는 운영 식별자를
+`<gui-user>`, `<gui-uid>`, `<pre-existing-control-vm>` 역할명으로 치환했습니다.
 
 ```bash
 run_user() {
-  sudo -u swk env HOME=/Users/swk USER=swk LOGNAME=swk LC_ALL=C LANG=C "$@"
+  sudo -u <gui-user> env HOME=/Users/<gui-user> USER=<gui-user> LOGNAME=<gui-user> LC_ALL=C LANG=C "$@"
 }
 ```
 
@@ -23,12 +24,13 @@ run_user() {
 화면을 관측했습니다.
 
 ```bash
-launchctl asuser 501 sudo -u swk env HOME=/Users/swk USER=swk LOGNAME=swk LC_ALL=C LANG=C \
+launchctl asuser <gui-uid> sudo -u <gui-user> \
+  env HOME=/Users/<gui-user> USER=<gui-user> LOGNAME=<gui-user> LC_ALL=C LANG=C \
   /usr/bin/open -F -n '/Users/Shared/k-ai-installer-build-20260810/dist/K-AI 설치.app'
 ```
 
-- 실행 전 이름: `kaipro-oneshot-mac1`
-- 실행 후 이름: `k-ai-dev,k-ai-runner,kaipro-oneshot-mac1`
+- 실행 전 이름: `<pre-existing-control-vm>`
+- 실행 후 이름: `k-ai-dev,k-ai-runner,<pre-existing-control-vm>`
 - clean-create producer SHA-256: `1c9d648f918da9c7ef5e2b9ed2ac27a484d75f1e1c02eb66be7fc2cbd117d689`
 - 완료 화면: `ui-complete.png`
 
@@ -46,11 +48,12 @@ release-ready 근거로 사용하지 않습니다. 완료 화면 PNG는 화면 �
 ### 최종 앱 무인 재실행과 멱등성 — PASS
 
 - UTC: 시작 `2026-08-10T16:01:36Z`, receipt `2026-08-10T16:01:37Z`, 종료 `2026-08-10T16:01:49Z`
-- 실행 전/후 이름: 각각 `k-ai-dev,k-ai-runner,kaipro-oneshot-mac1`
+- 실행 전/후 이름: 각각 `k-ai-dev,k-ai-runner,<pre-existing-control-vm>`
 - 정확한 실행 명령:
 
 ```bash
-launchctl asuser 501 sudo -u swk env HOME=/Users/swk USER=swk LOGNAME=swk LC_ALL=C LANG=C \
+launchctl asuser <gui-uid> sudo -u <gui-user> \
+  env HOME=/Users/<gui-user> USER=<gui-user> LOGNAME=<gui-user> LC_ALL=C LANG=C \
   /usr/bin/open -F -n '/Users/Shared/k-ai-installer-build-20260810/dist/K-AI 설치.app'
 sleep 8
 run_user '/Users/Shared/k-ai-installer-build-20260810/dist/kai-installer-cli' verify
@@ -85,7 +88,7 @@ run_user '/Users/Shared/k-ai-installer-build-20260810/dist/kai-installer-cli' ve
 ### record ID 재시작 — PASS
 
 - UTC: 전체 `2026-08-10T16:02:16Z~16:02:21Z`; dev `16:02:17Z`; runner `16:02:17Z`
-- 실행 전/후 이름: 각각 `k-ai-dev,k-ai-runner,kaipro-oneshot-mac1`
+- 실행 전/후 이름: 각각 `k-ai-dev,k-ai-runner,<pre-existing-control-vm>`
 - 보호 머신: 실행 전/후 모두 running
 - 정확한 명령 구조:
 
@@ -102,7 +105,7 @@ run_user '/Users/Shared/k-ai-installer-build-20260810/dist/kai-installer-cli' ve
 ### 재시작 뒤 isolation — PASS
 
 - 본 검사 UTC: `2026-08-10T16:03:27Z`
-- 검사 전 이름: `k-ai-dev,k-ai-runner,kaipro-oneshot-mac1`; 보호 머신 running
+- 검사 전 이름: `k-ai-dev,k-ai-runner,<pre-existing-control-vm>`; 보호 머신 running
 - 종료 뒤 cleanup/상태 독립 확인 UTC: `2026-08-10T16:04:03Z`
 - 정확한 명령:
 
@@ -118,7 +121,7 @@ run_user '/Users/Shared/k-ai-installer-build-20260810/scripts/verify-orbstack-is
 - Mac host와 sibling guest canary 접근 차단: PASS
 - public HTTPS: 두 guest 모두 PASS
 - host와 두 guest 임시 canary cleanup: PASS
-- 종료 뒤 이름: `k-ai-dev,k-ai-runner,kaipro-oneshot-mac1`; 세 머신 모두 running
+- 종료 뒤 이름: `k-ai-dev,k-ai-runner,<pre-existing-control-vm>`; 세 머신 모두 running
 
 검사는 다른 actor가 VM 상태를 바꾸지 않는 통제된 구간에서 수행했습니다. OrbStack에는 atomic no-start guest 실행이
 없으므로 동시 stop과의 TOCTOU는 이 acceptance의 전제 밖입니다.
@@ -160,7 +163,7 @@ scripts/verify-secrets.sh \
 ### OrbStack record ID 삭제 — BLOCKED
 
 - UTC: `2026-08-10T16:08:46Z~16:09:20Z`
-- 실행 전/후 이름: 각각 `k-ai-dev,k-ai-runner,kaipro-oneshot-mac1`
+- 실행 전/후 이름: 각각 `k-ai-dev,k-ai-runner,<pre-existing-control-vm>`
 - 정확한 핵심 명령:
 
 ```bash
@@ -183,7 +186,7 @@ TOCTOU 때문에 이름 fallback을 하지 않습니다. V12는 PASS가 아니�
 - 정확한 명령: `orb list -q`, 세 이름 각각 `orb info --format json`, app process·진단 파일 존재 검사
 - `k-ai-dev`: running
 - `k-ai-runner`: running
-- `kaipro-oneshot-mac1`: running
+- `<pre-existing-control-vm>`: running
 - 테스트 앱 프로세스: 0
 - 임시 support diagnostics와 canary: 없음
 - 내부 build artifact: `/Users/Shared/k-ai-installer-build-20260810/dist/K-AI 설치.app`
@@ -192,7 +195,7 @@ TOCTOU 때문에 이름 fallback을 하지 않습니다. V12는 PASS가 아니�
 
 - `16:00:18Z`: app receipt 직후 CLI verify를 겹쳐 실행해 `transactionBusy`가 발생했습니다. 잠금의 정상 동작이지만
   멱등 성공 근거로 쓰지 않고 `16:01:36Z` 실행을 다시 측정했습니다.
-- `16:02:39Z`: root 전용 SSH 현재 디렉터리에서 isolation script를 불러 host canary startup이 실패했습니다.
+- `16:02:39Z`: 운영자 전용 SSH 현재 디렉터리에서 isolation script를 불러 host canary startup이 실패했습니다.
   임시물 cleanup 뒤 GUI 사용자가 접근 가능한 `/Users/Shared`에서 다시 실행했습니다.
 - `16:08:22Z`: disposable VM에 OrbStack 최소치보다 작은 512MiB를 요청해 생성 전에 거부됐습니다. 생성된 VM은
   없었고, 1GiB로 다시 실행한 결과만 위 삭제 계약 근거로 사용했습니다.

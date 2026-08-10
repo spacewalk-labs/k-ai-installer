@@ -4,19 +4,19 @@
 
 ## 읽기 전용 실측
 
-- host: `swk-macmini-03`
-- hardware: Mac14,3 / Apple M2 / arm64 / 8GiB
-- macOS: 15.1.1 (24B91)
-- Data volume: 약 195GiB 여유
-- FileVault: Off
-- GUI: `swk` 로그인·자동 로그인, admin
+- host: `acceptance-mac`(공개용 역할명)
+- hardware: Apple Silicon / arm64 / 8GiB
+- macOS: 15.x
+- Data volume: acceptance 여유 공간 기준 통과
+- disk encryption: preflight 통과, 실제 값은 비공개 증거
+- GUI: 로그인된 acceptance 세션, 계정·권한·로그인 방식은 비공개 증거
 - OrbStack app: 2.2.1, Running
-- existing machine: `kaipro-oneshot-mac1` 한 대. 이번 태스크의 금지 대상
+- existing machine: `<pre-existing-control-vm>` 한 대. 이번 태스크의 금지 대상
 - build tools: Swift 6.0.3, pkgbuild/productbuild/codesign
 - OrbStack app: Gatekeeper accepted, Notarized Developer ID, bundle `dev.kdrag0n.MacVirt`, Team ID `HUAQ24HBR6`
 
-실측은 `viewer` 및 Tailscale check가 유효한 `root` 세션에서 read-only 명령만 사용했습니다. 시크릿 값, 환경변수,
-키 내용, 사용자 파일 내용은 수집하지 않았습니다.
+실측은 승인된 운영 경로의 read-only 명령만 사용했습니다. 운영 호스트명·계정·원격 접근 방식·실제 보안 설정값,
+시크릿 값, 환경변수, 키 내용, 사용자 파일 내용은 공개 로그에 넣지 않았습니다.
 
 실행한 probe 종류와 명령은 다음과 같습니다. 출력은 아래 allowlist 사실만 로그에 남겼습니다.
 
@@ -31,17 +31,17 @@ defaults read /Library/Preferences/com.apple.loginwindow autoLoginUser
 plutil -extract CFBundleShortVersionString|CFBundleIdentifier raw /Applications/OrbStack.app/Contents/Info.plist
 spctl -a -vv /Applications/OrbStack.app
 codesign -dv --verbose=4 /Applications/OrbStack.app
-sudo -u swk -H /Applications/OrbStack.app/Contents/MacOS/bin/orb version|status|list|create --help|info --help
+sudo -u <gui-user> -H /Applications/OrbStack.app/Contents/MacOS/bin/orb version|status|list|create --help|info --help
 ```
 
 OrbStack machine 이름 전후 대조:
 
 | 시점 | 전체 이름 | 이번 태스크 target 이름 |
 |---|---|---|
-| 계획 리뷰 전 | `kaipro-oneshot-mac1` | 없음 |
-| phase 1 커밋 게이트 직전 | `kaipro-oneshot-mac1` | 없음 |
+| 계획 리뷰 전 | `<pre-existing-control-vm>` | 없음 |
+| phase 1 커밋 게이트 직전 | `<pre-existing-control-vm>` | 없음 |
 
-두 번째 대조 명령은 다음이며 output은 `status=Running`, protected 이름 1개, target 이름 0개였습니다.
+두 번째 대조 명령은 다음이며 output은 `status=Running`, protected 역할 머신 1개, target 이름 0개였습니다.
 
 ```text
 orb status
@@ -73,7 +73,7 @@ GUI shell PATH에는 `orb`가 없을 수 있으므로 앱 내부 절대경로의
 
 첫 리뷰는 `refuted=true`였습니다. 다음 결함을 반영했습니다.
 
-- final runtime 계정과 이번 admin-user core spike의 경계를 분명히 함
+- final runtime 계정과 이번 기존 GUI 세션 core spike의 경계를 분명히 함
 - Finder PATH 의존 제거, OrbStack 서명·절대경로 검증 추가
 - 이름만 믿는 rollback을 record ID + install ID + owner nonce 3자 대조로 강화
 - manual `orb delete` 비상 절차 제거
@@ -96,4 +96,4 @@ refuted=false
 - task cockpit integrity: PASS, 5 phases
 - plan adversarial review: `refuted=false`
 - 실제 OrbStack target write: 전후 target 이름 0개
-- phase 2 진입 조건: Tailscale write check가 유효한 동안 Mac-side test/build만 수행
+- phase 2 진입 조건: 승인된 운영 쓰기 경로에서 Mac-side test/build만 수행

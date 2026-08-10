@@ -1,6 +1,6 @@
 # Phase 3 verification
 
-- 장비: `swk-macmini-03` (`swk` GUI 사용자 컨텍스트)
+- 장비: `acceptance-mac`(공개용 역할명, GUI 사용자 컨텍스트)
 - 검증 완료 시각: 2026-08-10T15:34:37Z 이전
 - core source commit: `k-ai-installer@a3029b6`
 - packaging commit: `k-ai-installer@905543a`
@@ -16,7 +16,7 @@
 - `dist/kai-installer-cli`: 생성 확인
 - `plutil -lint`: OK
 - `codesign --verify --deep --strict`: PASS
-- `kai-installer-cli probe --json`: Mac14,3·arm64·macOS 15.1.1·FileVault Off·충분한 디스크와
+- `kai-installer-cli probe --json`: Apple Silicon·arm64·macOS 15.x·preflight 통과·충분한 디스크와
   notarized OrbStack 2.2.1을 구조화 출력
 
 이 산출물은 내부 프로토타입이라 ad-hoc 서명입니다. Apple Developer 배포 서명·notarization·외부 다운로드는 하지

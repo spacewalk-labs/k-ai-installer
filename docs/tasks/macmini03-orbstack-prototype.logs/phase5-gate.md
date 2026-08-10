@@ -47,3 +47,13 @@ main에 보존하는 일입니다.
 - head: `feat/macmini03-installer-spike-20260810`
 - GitHub Actions 결과와 PR URL은 PR 생성 뒤 본문과 GitHub 기록을 정본으로 사용합니다.
 - merge는 Actions 성공과 mergeability 확인 뒤에만 수행합니다.
+
+## 공개 메타데이터 게이트
+
+첫 merge 직전 독립 검증은 공개 PR 문서에 실기 호스트명·계정·원격 접근 방식·보안 설정값·기존 보호 머신명이
+남았다는 HIGH를 찾아 merge를 중단했습니다. 공개 문서는 `acceptance-mac`, `<gui-user>`,
+`<pre-existing-control-vm>` 역할명으로 치환했고 실제 운영값은 이 저장소에 두지 않습니다. 제품 이름인
+`k-ai-dev`, `k-ai-runner`와 재현에 필요한 버전·계약 정보만 유지합니다.
+
+이 수정 뒤 운영 식별자 regex, gitleaks, staged manifest, 독립 검증과 GitHub Actions를 다시 통과해야 merge할 수
+있습니다.

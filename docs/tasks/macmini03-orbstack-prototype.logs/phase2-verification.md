@@ -1,6 +1,6 @@
 # Phase 2 verification
 
-- 장비: `swk-macmini-03` (`swk` GUI 사용자 컨텍스트)
+- 장비: `acceptance-mac`(공개용 역할명, GUI 사용자 컨텍스트)
 - 검증 시각: 2026-08-10T15:08:33Z 이전
 - 범위: Foundation core, SwiftUI app, 지원 CLI, dependency-free Swift self-test
 - 추가 설치: 없음. 기존 Command Line Tools의 Swift 6.0.3만 사용

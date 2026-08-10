@@ -16,12 +16,12 @@
 | `merged_sha` | |
 <!-- cockpit:end -->
 
-> 장비: `swk-macmini-03` · 실기 변경: **있음(가역)** · 공개 배포: **없음** ·
+> 장비: `acceptance-mac`(공개용 역할명) · 실기 변경: **있음(가역)** · 공개 배포: **없음** ·
 > 기준일: 2026-08-10 · 상위 계획: `k-ai-pro/docs/tasks/active/oneshot-installer.md`
 
 ## Outcome
 
-Mac mini 03의 GUI 사용자 `swk`가 터미널을 열지 않고 `K-AI 설치.app`을 실행하면 앱이 현재 상태를 쉬운 말로
+Mac mini 03의 GUI 사용자가 터미널을 열지 않고 `K-AI 설치.app`을 실행하면 앱이 현재 상태를 쉬운 말로
 보여 주고, 추가 클릭 없이 다음을 수행합니다.
 
 1. Apple Silicon·지원 macOS·디스크·FileVault·OrbStack 상태를 실제 값으로 확인합니다.
@@ -41,13 +41,13 @@ OrbStack 사용자별 가시성·자동시작, macOS cold boot를 통과한 후�
 
 ## 이번 범위에서 하지 않는 것
 
-- Mac 포맷, macOS 재설치, 현재 `swk` 계정·자동 로그인·전원·원격 로그인·Tailscale 설정 변경
-- OrbStack 전체 stop/start, macOS cold boot. 기존 `kaipro-oneshot-mac1`을 중단할 수 있어 이번 실기에서 제외
+- Mac 포맷, macOS 재설치, 기존 계정·로그인·전원·원격 관리 설정 변경
+- OrbStack 전체 stop/start, macOS cold boot. 기존 보호 머신을 중단할 수 있어 이번 실기에서 제외
 - OrbStack 전체 reset 또는 이름이 같은 기존 머신의 자동 삭제·변경
 - Apple Developer 서명·notarization·외부 사용자를 위한 Gatekeeper 배포
 - OrbStack이 없는 Mac의 자동 다운로드·설치. 이번 실기는 설치된 2.2.1을 사용하고, 부재 시 쉬운 차단 화면만 만듦
 - OrbStack 상용 라이선스 구매·조직 계정 가입의 대리 수행. 회사 사용자는 유효 라이선스가 필요하며 앱은 이를 안내
-- Claude·GitHub App/runner·Bitwarden·Tailscale guest 연결과 실제 K-AI 업무도구 설치
+- 회사 계정·runner·시크릿·guest 연결과 실제 K-AI 업무도구 설치
 - M710q·Windows USB·Ubuntu Desktop 경로
 - 조직 저장소 runner와 회사 시크릿
 
@@ -56,23 +56,24 @@ OrbStack 사용자별 가시성·자동시작, macOS cold boot를 통과한 후�
 구분할 수 없으므로 경계를 둡니다.
 
 이번 태스크의 통과는 **최종 Mac 설치 경로 통과가 아닙니다.** 후속 Mac acceptance는 전용 비관리자 runtime
-계정에서 로그인·자동시작·화면 잠금·재부팅 뒤 자동 복구를 별도로 검증해야 합니다. 현재 admin `swk` 세션에서의
+계정에서 로그인·자동시작·화면 잠금·재부팅 뒤 자동 복구를 별도로 검증해야 합니다. 이번 GUI acceptance 세션의
 결과를 그 검증의 대체 증거로 사용하지 않습니다.
 
 ## 확인된 장비 사실
 
-2026-08-10 `viewer@swk-macmini-03` 읽기 전용 실측값입니다.
+2026-08-10 acceptance Mac의 읽기 전용 실측값입니다. 공개 문서에는 운영 호스트명·계정·원격 접근 방식과 실제
+보안 설정값을 기록하지 않고 역할명과 통과 여부만 남깁니다.
 
 | 항목 | 값 | 이번 태스크의 의미 |
 |---|---|---|
-| 모델 | Mac14,3 / Apple M2 / arm64 / 8GiB | 지원 대상 |
-| macOS | 15.1.1 (24B91) | Swift 6·macOS 15 SDK 사용 가능 |
-| 디스크 | Data 228GiB 중 약 195GiB 여유 | 머신 2대 생성 가능 |
-| FileVault | Off | 헤드리스 재부팅 잠금 없음 |
-| GUI | `swk` 로그인·자동 로그인, `swk`는 admin | 기존 세션에서 OrbStack 실기 가능 |
+| 모델 | Apple Silicon / arm64 / 8GiB | 지원 대상 |
+| macOS | 15.x | Swift 6·macOS 15 SDK 사용 가능 |
+| 디스크 | acceptance 여유 공간 기준 통과 | 머신 2대 생성 가능 |
+| 디스크 암호화 | preflight 통과, 실제 값은 비공개 증거 | 이번 검증 조건 확인 |
+| GUI | 로그인된 acceptance 세션 | 기존 세션에서 OrbStack 실기 가능 |
 | OrbStack | 2.2.1, `/Applications/OrbStack.app` | 재설치 대신 상태·CLI 연결 검증 |
 | 빌드 도구 | Swift 6.0.3, `pkgbuild`, `productbuild`, `codesign` | Mac에서 실제 `.app` 제작 가능 |
-| 원격 관리 | viewer/ubuntu/root + Tailscale | 읽기는 개방, 쓰기는 check 승인 뒤 수행 |
+| 원격 관리 | 승인된 운영 경로, 식별자는 비공개 | 읽기 확인과 승인된 쓰기만 수행 |
 
 OrbStack 공식 계약은 [Linux machines](https://docs.orbstack.dev/machines/),
 [Isolated machines](https://docs.orbstack.dev/machines/isolated),
@@ -128,7 +129,7 @@ Mac 파일·호스트·SSH agent를 차단하고, `--isolate-network`로 다른 
    보강해 재개합니다.
 4. rollback도 install ID, machine record ID, 고정된 두 이름을 모두 대조한 뒤 사용자 확인을 받아야 실행합니다.
 5. 진단은 allowlist 필드만 저장하며 홈 경로, 사용자 환경, SSH key, token, 전체 process list는 수집하지 않습니다.
-6. 이번 실기의 Mac 쓰기는 Tailscale check 승인 뒤 `root`가 GUI 사용자 `swk` 컨텍스트로 제한 실행합니다.
+6. 이번 실기의 Mac 쓰기는 승인된 운영 경로에서 GUI 사용자 컨텍스트로 제한 실행합니다.
 7. 실제 장비 명령은 repository revision을 기록하고, 실행 전후 머신 목록을 증거 로그에 남깁니다.
 
 ## 단계와 PR 경계
@@ -155,12 +156,12 @@ Mac 파일·호스트·SSH agent를 차단하고, `--isolate-network`로 다른 
 | V5 | CLI 계약 | `dist/kai-installer-cli probe --json` | 지원 모델·OS·disk·FileVault·OrbStack을 구조화 출력하고, notarized OrbStack Team ID·bundle ID·version 확인, secret 0 |
 | V6 | Finder UI·생성 | GUI 사용자에서 Finder/open으로 `.app` 실행하고 window를 독립 관측 → 추가 옵션 없이 앱 시작; `app-launch` action receipt의 process PID·app build SHA 기록 | CLI apply 회차는 불인정; 이 receipt 하나가 V7~V9의 유일한 실기 create producer |
 | V7 | 새 머신 상태 | V6 receipt 뒤 record ID로 `orb info --format json`, `orb config get`의 CPU·memory·disk, guest owner 확인; cloud-init 완료 60초 뒤 guest cgroup memory.current 3회 측정 | 두 이름만 추가; noble/arm64, 2CPU·2GiB·24GiB, 격리 config, owner 일치; 각 guest 3회 모두 512MiB 이하 |
-| V8 | isolation | host와 sibling guest에 live canary를 띄워 host/자기 자신에서 먼저 200 positive control 확인; host disposable `ssh-agent`에 ephemeral key를 넣어 `ssh-add -L` 성공 확인; 이후 대상 guest에서 `/mnt/mac`와 `/Users/swk`의 random sentinel 부재, `SSH_AUTH_SOCK` 부재·ephemeral key 접근 실패, host/sibling canary 접근 실패, HTTPS public probe 성공 확인 | canary·agent positive control 성공, 파일·agent·host·sibling 차단 + 인터넷 성공 |
+| V8 | isolation | host와 sibling guest에 live canary를 띄워 host/자기 자신에서 먼저 200 positive control 확인; host disposable `ssh-agent`에 ephemeral key를 넣어 `ssh-add -L` 성공 확인; 이후 대상 guest에서 `/mnt/mac`와 `/Users/<gui-user>`의 random sentinel 부재, `SSH_AUTH_SOCK` 부재·ephemeral key 접근 실패, host/sibling canary 접근 실패, HTTPS public probe 성공 확인 | canary·agent positive control 성공, 파일·agent·host·sibling 차단 + 인터넷 성공 |
 | V9 | 멱등·재개 | fake orb failpoint를 create 전, child 실행 중, record 생성 후 owner marker 전, dev owner 확인 후 runner 전, 최종 verify 전에 각각 주입하고 재실행; 손상·truncate state도 주입; 실기는 V6 앱 두 번째 실행과 두 owned machine을 record ID로 각각 restart한 뒤 재실행 | 소유가 증명된 단계만 재개하고 중복 create/delete 0; 무표식 record는 보존한 채 지원 필요로 중단; corrupt state fail-closed; 최종 verify 성공 |
 | V10 | 충돌 안전 | fake orb 동명·무표식 fixture | exit nonzero, delete/config 호출 0 |
 | V11 | 비밀 누출 | gitleaks가 synthetic `BWS_ACCESS_TOKEN`·GitHub·Tailscale·private-key fixture는 거부하고 safe fixture는 허용; tracked/untracked expected source, `.app` plist/resources와 binary `strings`, 실제 state.json, support bundle을 별도 manifest로 스캔 | positive/negative control 통과, 문서·test allowlist 외 실제 대상 match 0 |
 | V12 | rollback·cleanup | V6 receipt와 Mac state, guest owner nonce hash, record ID를 검증한 CLI로 rollback 실행 | OrbStack이 record ID 삭제를 정상 지원할 때만 소유 두 머신·정확한 state file 제거. Mac mini 03의 OrbStack 2.2.1은 ID 삭제 내부 panic으로 현재 BLOCKED; 이름 삭제 fallback 금지 |
-| V13 | Cockpit | `python3 /home/josh/workspace/swk-wiki/swk-wiki-vault/40_Playbooks/_System/task-to-done/scripts/verify-cockpit.py docs/tasks/macmini03-orbstack-prototype.md` | terminal PASS |
+| V13 | Cockpit | `python3 <task-to-done>/scripts/verify-cockpit.py docs/tasks/macmini03-orbstack-prototype.md` | terminal PASS |
 | V14 | 독립 적대검증 | `/self-verify-seven` 결과 | `refuted=false` |
 
 V6~V10의 실기에는 정확한 명령, UTC 시각, app build SHA, 전후 머신 이름만 기록합니다. IP·사용자 홈·token은
@@ -175,7 +176,7 @@ OrbStack 2.2.1은 이 ID 삭제에서 내부 panic을 내므로 현재 CLI는 �
 record ID 삭제 acceptance와 사용자 확인 UI를 추가합니다.
 
 ```bash
-# GUI 사용자 swk 컨텍스트에서 실행. 아래 두 이름 외에는 허용하지 않는다.
+# GUI 사용자 컨텍스트에서 실행. 아래 두 이름 외에는 허용하지 않는다.
 kai-installer-cli rollback --require-owner --machine k-ai-dev --machine k-ai-runner
 ```
 
@@ -189,6 +190,6 @@ kai-installer-cli rollback --require-owner --machine k-ai-dev --machine k-ai-run
 - isolation 검증에서 Mac 파일·host·SSH agent·다른 guest 접근 중 하나라도 성공함
 - Mac Data 여유 공간이 80GiB 아래로 내려감
 - build/test artifact에서 credential 패턴이 검출됨
-- root Tailscale check 승인 없이 실기 쓰기가 필요함
+- 승인된 운영 쓰기 경로 없이 실기 변경이 필요함
 
 중단은 실패를 숨기는 수동 우회로 바꾸지 않습니다. 원인을 증거에 남기고 해당 phase를 `blocked`로 표시합니다.

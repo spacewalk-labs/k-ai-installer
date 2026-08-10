@@ -1,3 +1,7 @@
+docs/tasks/macmini03-orbstack-prototype.logs/phase1-plan-review.md
+docs/tasks/macmini03-orbstack-prototype.logs/phase2-verification.md
+docs/tasks/macmini03-orbstack-prototype.logs/phase3-verification.md
+docs/tasks/macmini03-orbstack-prototype.logs/phase4-live-verification.md
 docs/tasks/macmini03-orbstack-prototype.logs/phase5-expected-files.txt
 docs/tasks/macmini03-orbstack-prototype.logs/phase5-gate.md
 docs/tasks/macmini03-orbstack-prototype.md
