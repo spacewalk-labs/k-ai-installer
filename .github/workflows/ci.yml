@@ -1,9 +1,14 @@
 name: CI
 
 on:
+  # 문서만 바뀐 변경에는 돌지 않는다(2026-09-25 cho 지시). 재포함 = 코드가 읽는 문서.
+  # scripts/verify-secrets.sh 가 docs/tasks/macmini03-orbstack-prototype.logs/
+  # phase3-secret-scan-targets.txt 를 diff 대상으로 읽는다 — docs/** 밖으로 재포함.
   pull_request:
+    paths: ['**', '!**/*.md', '!**/*.mdx', '!docs/**', 'docs/tasks/macmini03-orbstack-prototype.logs/phase3-secret-scan-targets.txt']
   push:
     branches: [main]
+    paths: ['**', '!**/*.md', '!**/*.mdx', '!docs/**', 'docs/tasks/macmini03-orbstack-prototype.logs/phase3-secret-scan-targets.txt']
 
 permissions:
   contents: read
